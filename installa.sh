@@ -4,9 +4,9 @@
 
 function ascii {
 
-echo “Installazione di Arch Linux”
+echo "Installazione di Arch Linux"
 loadkeys it
-echo “[FATTO] Layout italiano impostato.
+echo "[FATTO] Layout italiano impostato."
 
 }
 
