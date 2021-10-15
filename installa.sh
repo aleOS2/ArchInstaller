@@ -205,9 +205,9 @@ echo -e "Installing GRUB.."
 function archroot {
 	br
 	read -r -p "Inserisci il nomeutente: " uname
-	read -r -p "Inserisci il nome del pc (hostname) : " hname
+	read -r -p "Inserisci il nome del pc, hostname : " hname
 
-	echo -e "Imposto località (Rome) \n"
+	echo -e "Imposto località [Rome] \n"
 	arch-chroot /mnt bash -c "ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime && hwclock --systohc && sed -i 's/#it_IT.UTF-8/it_IT.UTF-8/' /etc/locale.gen && locale-gen && echo 'LANG=it_IT.UTF-8' > /etc/locale.conf && exit"
 
 	echo -e "Imposto hostname\n"
