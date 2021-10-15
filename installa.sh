@@ -214,7 +214,12 @@ function archroot {
 	arch-chroot /mnt bash -c "echo $hname > /etc/hostname && echo 127.0.0.1	$hname > /etc/hosts && echo ::1	$hname >> /etc/hosts && echo 127.0.1.1	$hname.localdomain	$hname >> /etc/hosts && exit"
 
 	echo "Imposto password di root:"
-	arch-chroot /mnt bash -c "passwd && useradd --create-home $uname && echo 'Imposto la password dell'utente:' && passwd $uname && groupadd sudo && gpasswd -a $uname sudo && EDITOR=vim visudo && exit"
+	arch-chroot /mnt bash -c passwd
+	arch-chroot /mnt bash -c useradd --create-home $uname && echo "Imposto la password dell'utente:"
+	arch-chroot /mnt bash -c passwd $uname
+	arch-chroot /mnt bash -c groupadd sudo
+	arch-chroot /mnt bash -c gpasswd -a $uname sudo
+	arch-chroot /mnt bash -c EDITOR=vim visudo && exit
 
 	echo -e "Abilito i serivizi systemctl\n"
 	arch-chroot /mnt bash -c "systemctl enable bluetooth && exit"
@@ -225,9 +230,15 @@ function archroot {
 
 	echo -e "Imposto pacman...\n"
 	# Enabling multilib in pacman
-	arch-chroot /mnt bash -c "sed -i '93s/#\[/\[/' /etc/pacman.conf && sed -i '94s/#I/I/' /etc/pacman.conf && pacman -Syu && sleep 1 && exit"
+	arch-chroot /mnt bash -c sed -i '93s/#\[/\[/' /etc/pacman.conf
+	arch-chroot /mnt bash -c sed -i '94s/#I/I/' /etc/pacman.conf
+	arch-chroot /mnt bash -c pacman -Syu && sleep 1 && exit
 	# Tweaking pacman, uncomment options Color, TotalDownload and VerbosePkgList
-	arch-chroot /mnt bash -c "sed -i '34s/#C/C/' /etc/pacman.conf && sed -i '35s/#T/T/' /etc/pacman.conf && sed -i '37s/#V/V/' /etc/pacman.conf && sleep 1 && exit"
+	arch-chroot /mnt bash -c sed -i '34s/#C/C/' /etc/pacman.conf
+	arch-chroot /mnt bash -c sed -i '35s/#T/T/' /etc/pacman.conf
+	arch-chroot /mnt bash -c sed -i '37s/#V/V/' /etc/pacman.conf
+	arch-chroot /mnt bash -c sleep 1
+	arch-chroot /mnt bash -c exit
 
 	cont
 }
