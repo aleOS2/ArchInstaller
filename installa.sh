@@ -39,7 +39,7 @@ function partion {
 	case "$resp" in
 		[sS][iI]|[sS])
 			echo "..."
-			read -r -p "Quale disco utilizzare (dev/sda)? " drive
+			read -r -p "Quale disco utilizzare [dev/sda]? " drive
 			# Using gdisk for GPT, if you want to use MBR replace it with fdisk
 			gdisk $drive
 			;;
@@ -51,12 +51,12 @@ function partion {
 
 function mounting {
 	br
-	read -r -p "Qual’è la partizione root (dev/sda2)? " rootp
+	read -r -p "Qual’è la partizione root [dev/sda2]? " rootp
 	mkfs.ext4 $rootp
 	mount $rootp /mnt
 	mkdir /mnt/boot
-	read -r -p "Qual’è la partizione di avvio efi (dev/sda1)? " bootp
-	read -r -p "Vuoi formattare la partizione di avvio? (Fare no se si vuole dualbootare) [s/N] " response
+	read -r -p "Qual’è la partizione di avvio efi [dev/sda1]? " bootp
+	read -r -p "Vuoi formattare la partizione di avvio? Fare no se si vuole dualbootare [s/N] " response
 	case "$response" in
 		[sS][iS]|[sS])
 			mkfs.fat -F32 $bootp
@@ -68,17 +68,17 @@ function mounting {
 read -r -p "Usare la swap? [S/n] " responsep
 	case "$responsep" in
 		[sS][iS]|[sS])
-			read -r -p "Qual’è la partizione swap? (/dev/sda4)" swapp
+			read -r -p "Qual’è la partizione swap? [/dev/sda4]" swapp
 			swapon $swapp
 			;;
 		*)
 			;;
 	esac
-	read -r -p "Si vuole usare una partizione home (Se no verrà usata quella root)? [s/N] " responsehome
+	read -r -p "Si vuole usare una partizione home, Se no verrà usata quella root? [s/N] " responsehome
 	case "$responsehome" in
 		[sS][iI]|[sS])
-			read -r -p "Qual’è la partizione home? (/dev/sda3)" homep
-			read -r -p "Si vuole formattare la partizione home?? [s/N] " rhome
+			read -r -p "Qual’è la partizione home? [/dev/sda3]" homep
+			read -r -p "Si vuole formattare la partizione home? [s/N] " rhome
 			case "$rhome" in
 				[sS][iI]|[sS])
 					mkfs.ext4 $homep
