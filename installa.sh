@@ -41,7 +41,7 @@ function partion {
 			echo "..."
 			read -r -p "Quale disco utilizzare [dev/sda]? " drive
 			# Using gdisk for GPT, if you want to use MBR replace it with fdisk
-			gdisk $drive
+			cfdisk $drive
 			;;
 		*)
 			;;
