@@ -152,19 +152,23 @@ case "$desktope" in
 
 function installgnome {
 	pacstrap /mnt xorg gnome gnome-tweaks papirus-icon-theme
-	arch-chroot /mnt bash -c "systemctl enable gdm && exit"
+	arch-chroot /mnt bash -c systemctl enable gdm
+	arch-chroot /mnt bash -c exit
 	# Editing gdm's config for disabling Wayland as it does not play nicely with Nvidia
-	arch-chroot /mnt bash -c "sed -i 's/#W/W/' /etc/gdm/custom.conf && exit"
+	arch-chroot /mnt bash -c sed -i 's/#W/W/' /etc/gdm/custom.conf
+	arch-chroot /mnt bash -c exit
 }
 
 function installxfce4 {
 	pacstrap /mnt xorg xfce4 sddm papirus-icon-theme
-	arch-chroot /mnt bash -c "systemctl enable sddm && exit"
+	arch-chroot /mnt bash -c systemctl enable sddm
+	arch-chroot /mnt bash -c exit
 }
 
 function installkde {
 	pacstrap /mnt xorg plasma sddm papirus-icon-theme
-	arch-chroot /mnt bash -c "systemctl enable sddm && exit"
+	arch-chroot /mnt bash -c systemctl enable sddm
+	arch-chroot /mnt bash -c exit
 	pacstrap /mnt ark dolphin ffmpegthumbs gwenview kaccounts-integration kate kdialog kio-extras konsole ksystemlog okular print-manager
 }
 
@@ -196,7 +200,9 @@ function installgrub {
 			;;
 		*)
 echo -e "Installing GRUB.."
-			arch-chroot /mnt bash -c "grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch && grub-mkconfig -o /boot/grub/grub.cfg && exit"
+			arch-chroot /mnt bash -c grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
+			arch-chroot /mnt bash -c grub-mkconfig -o /boot/grub/grub.cfg
+			arch-chroot /mnt bash -c exit
 			;;
 	esac
 	cont
@@ -208,35 +214,51 @@ function archroot {
 	read -r -p "Inserisci il nome del pc, hostname : " hname
 
 	echo -e "Imposto località [Rome] \n"
-	arch-chroot /mnt bash -c "ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime && hwclock --systohc && sed -i 's/#it_IT.UTF-8/it_IT.UTF-8/' /etc/locale.gen && locale-gen && echo 'LANG=it_IT.UTF-8' > /etc/locale.conf && exit"
+	arch-chroot /mnt bash -c ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
+	arch-chroot /mnt bash -c hwclock --systohc
+	arch-chroot /mnt bash -c sed -i "s/#it_IT.UTF-8/it_IT.UTF-8/" /etc/locale.gen
+	arch-chroot /mnt bash -c locale-gen
+	arch-chroot /mnt bash -c echo "LANG=it_IT.UTF-8" > /etc/locale.conf
+	arch-chroot /mnt bash -c exit
 
 	echo -e "Imposto hostname\n"
-	arch-chroot /mnt bash -c "echo $hname > /etc/hostname && echo 127.0.0.1	$hname > /etc/hosts && echo ::1	$hname >> /etc/hosts && echo 127.0.1.1	$hname.localdomain	$hname >> /etc/hosts && exit"
+	arch-chroot /mnt bash -c echo $hname > /etc/hostname
+	arch-chroot /mnt bash -c echo 127.0.0.1	$hname > /etc/hosts
+	arch-chroot /mnt bash -c echo ::1	$hname >> /etc/hosts
+	arch-chroot /mnt bash -c echo 127.0.1.1	$hname.localdomain	$hname >> /etc/hosts
+	arch-chroot /mnt bash -c exit
 
 	echo "Imposto password di root:"
 	arch-chroot /mnt bash -c passwd
-	arch-chroot /mnt bash -c useradd --create-home $uname && echo "Imposto la password dell'utente:"
+	arch-chroot /mnt bash -c useradd --create-home $uname
+	arch-chroot /mnt bash -c echo "Imposto la password dell'utente:"
 	arch-chroot /mnt bash -c passwd $uname
 	arch-chroot /mnt bash -c groupadd sudo
 	arch-chroot /mnt bash -c gpasswd -a $uname sudo
-	arch-chroot /mnt bash -c EDITOR=vim visudo && exit
+	arch-chroot /mnt bash -c EDITOR=vim visudo
+	arch-chroot /mnt bash -c exit
 
 	echo -e "Abilito i serivizi systemctl\n"
-	arch-chroot /mnt bash -c "systemctl enable bluetooth && exit"
-	arch-chroot /mnt bash -c "systemctl enable NetworkManager && exit"
+	arch-chroot /mnt bash -c systemctl enable bluetooth
+	arch-chroot /mnt bash -c exit
+	arch-chroot /mnt bash -c systemctl enable NetworkManager
+	arch-chroot /mnt bash -c exit
 
 	echo -e "Abilito paccache.timer\n"
-	arch-chroot /mnt bash -c "systemctl enable paccache.timer && exit"
+	arch-chroot /mnt bash -c systemctl enable paccache.timer
+	arch-chroot /mnt bash -c exit
 
 	echo -e "Imposto pacman...\n"
 	# Enabling multilib in pacman
-	arch-chroot /mnt bash -c sed -i '93s/#\[/\[/' /etc/pacman.conf
-	arch-chroot /mnt bash -c sed -i '94s/#I/I/' /etc/pacman.conf
-	arch-chroot /mnt bash -c pacman -Syu && sleep 1 && exit
+	arch-chroot /mnt bash -c sed -i "93s/#\[/\[/" /etc/pacman.conf
+	arch-chroot /mnt bash -c sed -i "94s/#I/I/" /etc/pacman.conf
+	arch-chroot /mnt bash -c pacman -Syu
+	arch-chroot /mnt bash -c sleep 1
+	arch-chroot /mnt bash -c exit
 	# Tweaking pacman, uncomment options Color, TotalDownload and VerbosePkgList
-	arch-chroot /mnt bash -c sed -i '34s/#C/C/' /etc/pacman.conf
-	arch-chroot /mnt bash -c sed -i '35s/#T/T/' /etc/pacman.conf
-	arch-chroot /mnt bash -c sed -i '37s/#V/V/' /etc/pacman.conf
+	arch-chroot /mnt bash -c sed -i "34s/#C/C/" /etc/pacman.conf
+	arch-chroot /mnt bash -c sed -i "35s/#T/T/" /etc/pacman.conf
+	arch-chroot /mnt bash -c sed -i "37s/#V/V/" /etc/pacman.conf
 	arch-chroot /mnt bash -c sleep 1
 	arch-chroot /mnt bash -c exit
 
